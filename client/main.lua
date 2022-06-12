@@ -5,6 +5,7 @@ RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 	exports['qbr-core']:GetPlayerData(function(PlayerData)
 		if PlayerData.metadata["injail"] > 0 then
 			TriggerEvent("prison:client:Enter", PlayerData.metadata["injail"])
+			
 		end
 	end)
 end)
@@ -36,6 +37,7 @@ RegisterNetEvent('prison:client:Enter', function(time)
 	Wait(500)
 	inJail = true
 	jailTime = time
+	TriggerEvent('qbr-prison:client:jailtime')
 	TriggerServerEvent("prison:server:SetJailStatus", jailTime)
 	TriggerServerEvent("prison:server:SaveJailItems", jailTime)
 	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
@@ -127,21 +129,13 @@ end)
 
 --Shitty Loop (gets the job done)
 
-Citizen.CreateThread(function()
-	Wait(10000)
-	exports['qbr-core']:GetPlayerData(function(PlayerData)
-	if PlayerData.metadata["injail"] > 0 then
-		TriggerEvent('qbr-prison:client:jailtime')
-	end
-end)
-end)
 RegisterNetEvent('qbr-prison:client:jailtime', function()
 	exports['qbr-core']:GetPlayerData(function(PlayerData)
 		if PlayerData.metadata["injail"] > 0 then
+			print("works")
             Wait((1000 * 60))
             jailTime -= 1
 			TriggerEvent('qbr-prison:client:jailtime')
-		else
 		end
 	end)
-	end)
+end)
